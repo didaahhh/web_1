@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Kader - Posyandu</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar navbar-kader">
+    <div class="nav-brand">
+      <span class="logo-sm">👩‍⚕️</span>
+      <span>Panel Kader Posyandu</span>
+    </div>
+    <div class="nav-user">
+      <span><%= user.nama %></span>
+      <a href="/kader/logout" class="btn btn-outline btn-sm">Keluar</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="page-header">
+      <div>
+        <h1>Data Balita Terdaftar</h1>
+        <p class="subtitle">Desa Candiareng — Total <%= balitaList.length %> balita</p>
+      </div>
+      <a href="/kader/tambah-balita" class="btn btn-primary">+ Tambah Balita Baru</a>
+    </div>
+
+    <section class="card">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Balita</th>
+              <th>Umur</th>
+              <th>Jenis Kelamin</th>
+              <th>Nama Ibu</th>
+              <th>NIK Ibu</th>
+              <th>Kunjungan Terakhir</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% balitaList.forEach((b, i) => { %>
+              <tr>
+                <td><%= i + 1 %></td>
+                <td><strong><%= b.nama %></strong></td>
+                <td><%= formatUmur(hitungUmurBulan(b.tanggal_lahir)) %></td>
+                <td><%= b.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' %></td>
+                <td><%= b.nama_ibu %></td>
+                <td><%= b.nik_ibu %></td>
+                <td><%= b.kunjungan_terakhir ? formatTanggal(b.kunjungan_terakhir) : '-' %></td>
+                <td class="actions">
+                  <a href="/kader/balita/<%= b.id %>" class="btn btn-sm btn-outline">Detail</a>
+                  <a href="/kader/kunjungan/<%= b.id %>" class="btn btn-sm btn-primary">+ Kunjungan</a>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
