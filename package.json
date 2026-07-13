@@ -1,0 +1,16 @@
+{
+  "name": "posyandu-web",
+  "version": "1.0.0",
+  "description": "Web Pendataan Riwayat Posyandu Balita - Desa Candiareng",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1"
+  }
+}
