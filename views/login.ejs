@@ -1,54 +1,352 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Posyandu Desa Candiareng</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0ea5e9;
+      --primary-hover: #0284c7;
+      --secondary: #10b981;
+      --bg-gradient-start: #f0f9ff;
+      --bg-gradient-end: #e0f2fe;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+      --white: #ffffff;
+      --border: #e2e8f0;
+      --input-bg: #f8fafc;
+      --radius-lg: 24px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      color: var(--text-dark);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Abstract background shapes */
+    body::before,
+    body::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: 0;
+    }
+
+    body::before {
+      width: 400px;
+      height: 400px;
+      background: rgba(14, 165, 233, 0.25);
+      top: -100px;
+      left: -100px;
+    }
+
+    body::after {
+      width: 500px;
+      height: 500px;
+      background: rgba(16, 185, 129, 0.15);
+      bottom: -150px;
+      right: -100px;
+    }
+
+    .auth-container {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      width: 100%;
+      max-width: 420px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      padding: 2.5rem;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo-container {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #ffffff, #f0f9ff);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      margin: 0 auto 1.25rem;
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      transform: rotate(-5deg);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .auth-container:hover .logo-container {
+      transform: rotate(0deg) scale(1.05);
+    }
+
+    .auth-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .auth-header p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .tabs {
+      display: flex;
+      background: rgba(241, 245, 249, 0.8);
+      padding: 0.35rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.75rem;
+      position: relative;
+      border: 1px solid rgba(226, 232, 240, 0.5);
+    }
+
+    .tab-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.8rem 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      background: var(--white);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .tab-btn:not(.active):hover {
+      color: var(--text-dark);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 0.6rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      border: 2px solid transparent;
+      background: var(--input-bg);
+      border-radius: var(--radius-md);
+      color: var(--text-dark);
+      transition: all 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--white);
+      box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    }
+
+    .form-control::placeholder {
+      color: #94a3b8;
+      font-weight: 300;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #0284c7);
+      color: var(--white);
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+    }
+
+    .auth-footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+    }
+
+    .auth-footer p {
+      margin: 0;
+    }
+
+    .auth-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .auth-footer a:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    .alert-error {
+      background-color: #fee2e2;
+      color: #ef4444;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+      border: 1px solid #f87171;
+    }
+  </style>
 </head>
+
 <body class="auth-page">
   <div class="auth-container">
     <div class="auth-header">
-      <div class="logo">🏥</div>
+      <div class="logo-container">🏥</div>
       <h1>Posyandu Desa Candiareng</h1>
       <p>Web Pendataan Riwayat Balita</p>
     </div>
 
-    <% if (error) { %>
+    <% if (typeof error !== 'undefined' && error) { %>
       <div class="alert alert-error"><%= error %></div>
     <% } %>
 
     <div class="tabs">
-      <button class="tab-btn <%= tab === 'nik' ? 'active' : '' %>" data-tab="nik">NIK & Password</button>
-      <button class="tab-btn <%= tab === 'anak' ? 'active' : '' %>" data-tab="anak">Nama & Tgl Lahir Anak</button>
+      <button class="tab-btn active" data-tab="nik">NIK & Password</button>
+      <button class="tab-btn" data-tab="anak">Nama Anak</button>
     </div>
 
-    <div class="tab-content <%= tab === 'nik' ? 'active' : '' %>" id="tab-nik">
+    <div class="tab-content active" id="tab-nik">
       <form action="/login/nik" method="POST" class="form">
         <div class="form-group">
           <label for="nik">NIK Ibu</label>
-          <input type="text" id="nik" name="nik" placeholder="Masukkan 16 digit NIK" maxlength="16" required>
+          <div class="input-wrapper">
+            <input type="text" id="nik" name="nik" class="form-control" placeholder="Masukkan 16 digit NIK"
+              maxlength="16" required>
+          </div>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Masukkan password" required>
+          <div class="input-wrapper">
+            <input type="password" id="password" name="password" class="form-control" placeholder="Masukkan password"
+              required>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+        <button type="submit" class="btn btn-primary">Masuk ke Dasbor</button>
       </form>
     </div>
 
-    <div class="tab-content <%= tab === 'anak' ? 'active' : '' %>" id="tab-anak">
+    <div class="tab-content" id="tab-anak">
       <form action="/login/anak" method="POST" class="form">
         <div class="form-group">
           <label for="nama_anak">Nama Anak</label>
-          <input type="text" id="nama_anak" name="nama_anak" placeholder="Nama lengkap anak" required>
+          <div class="input-wrapper">
+            <input type="text" id="nama_anak" name="nama_anak" class="form-control" placeholder="Nama lengkap anak"
+              required>
+          </div>
         </div>
         <div class="form-group">
           <label for="tanggal_lahir">Tanggal Lahir Anak</label>
-          <input type="date" id="tanggal_lahir" name="tanggal_lahir" required>
+          <div class="input-wrapper">
+            <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-control" required>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+        <button type="submit" class="btn btn-primary">Masuk ke Dasbor</button>
       </form>
     </div>
 
@@ -57,6 +355,27 @@
       <p>Untuk kader Posyandu: <a href="/kader/login">Login Kader</a></p>
     </div>
   </div>
-  <script src="/js/app.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          // Remove active classes
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+
+          // Add active class to clicked tab
+          btn.classList.add('active');
+          const targetTabId = 'tab-' + btn.getAttribute('data-tab');
+          document.getElementById(targetTabId).classList.add('active');
+        });
+      });
+    });
+  </script>
 </body>
+
 </html>
